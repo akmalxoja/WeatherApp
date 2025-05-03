@@ -6,7 +6,7 @@ namespace WeatherApp.Services
     public class WeatherApiService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey = "sadas";
+        private readonly string _apiKey = "1693ab4e6cd64db841cb11b20be8f662";
 
         public WeatherApiService(HttpClient httpClient)
         {
@@ -20,7 +20,22 @@ namespace WeatherApp.Services
 
             var json = await response.Content.ReadAsStringAsync();
 
-            var data  = JsonSerializer.Deserialize<OpenWeatherResponse>(json);
+           // var data  = JsonSerializer.Deserialize<OpenWeatherResponse>(json);
+
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var data = JsonSerializer.Deserialize<OpenWeatherResponse>(json, options);
+
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"API so‘rovida xatolik: {response.StatusCode}");
+            }
+
 
             return new Weather
             {
@@ -31,6 +46,7 @@ namespace WeatherApp.Services
                
             };
             //
+
         }
     }
 }
